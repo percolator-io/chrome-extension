@@ -19,6 +19,5 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo){
 });
 
 chrome.pageAction.onClicked.addListener(function(tab) {
-    console.log(tab);
     publishLink(tab.url);
 });
