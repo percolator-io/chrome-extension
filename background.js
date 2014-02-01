@@ -1,11 +1,11 @@
-var api_url = "http://localhost:3000/api/links/";
+var api_url = "http://localhost:3000/api/v1/stars/";
 
 var tabCompleted = function(tabId){
     chrome.pageAction.show(tabId);
 };
 
 var publishLink = function(url){
-    var params = "link[url]=" + url;
+    var params = "star[url]=" + url;
     var req = new XMLHttpRequest();
     req.open("POST", api_url, true);
     req.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
