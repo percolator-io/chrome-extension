@@ -4,13 +4,28 @@
   "version": "0.0.1",
   "permissions": [
     "storage",
-    "identity"
+    "http://localhost:8080/oauth/token"
   ],
 
   "background": {
-    "scripts": ["background.js"]
+    "scripts": ["libs/chrome-ex-oauth2/oauth2.js", "background.js"]
   },
   "browser_action": {
     "default_icon": "icon.png"
-  }
+  },
+
+
+
+  "content_scripts": [
+    {
+      "matches": ["http://localhost:8080/blank.html*"],
+      "js":["libs/chrome-ex-oauth2/injection.js"],
+      "run_at": "document_start"
+    }
+  ],
+
+  "web_accessible_resources": [
+    "libs/chrome-ex-oauth2/oauth2.html"
+  ]
+
 }

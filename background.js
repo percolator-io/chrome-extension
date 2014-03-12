@@ -1,5 +1,4 @@
-var api_url = "http://localhost:3000/api/v1/stars/";
-var oauth_url = 'http://localhost:3000/oauth/authorize?client_id=9583a5e9d8ced23c04009278d8be4891f98c1a0b75f0761a43ec29d659127122&redirect_uri=https%3A%2F%2Foioklhkaeijpcnljalielofdaikhlknm.chromiumapp.org%2F&response_type=token';
+var api_url = "http://localhost:8080/api/v1/stars/";
 
 var createParams = function(url, token){
   return "star[url]=" + url + "&" + "access_token=" + token;
@@ -13,14 +12,40 @@ var publishLink = function(url, token){
   req.send(params);
 };
 
+// https://github.com/jjNford/chrome-ex-oauth2
+
+// почему не используется identity:
+// а) не работают кукисы
+// б) нет адресной строки. т.к. у нас аутентификация через гитхаб, я не хочу вводить свой пароль на странице без УРЛа
+
+
+// как это работает:
+// запускаем window.oauth2.start()
+// она отрабоатывает и помещает токен в локалсторадж
+// подписываемся на изменения локалстораджа и получаем токен %)
+
 chrome.browserAction.onClicked.addListener(function(tab) {
-  chrome.identity.launchWebAuthFlow({url: oauth_url, interactive: true}, function(redirect_url){
-    var matcher = new RegExp('.*#access_token=(.*?)&.*');
-    var results = redirect_url.match(matcher);
-    var token = results[1];
+//  chrome.storage.sync.clear();
 
-    console.log(token)
 
-    publishLink(tab.url, token);
+  chrome.storage.sync.get('oauth2_token', function(items){
+    var token = items['oauth2_token'];
+    if (token) {
+      publishLink(tab.url, token);
+    } else {
+      window.oauth2.start();
+
+      // потенциальная проблема навешивания кучи Listeners
+      //TODO: добавить фильтр
+      chrome.storage.onChanged.addListener(function(changes){
+        var tokenData = changes['oauth2_token'];
+
+
+        if (tokenData) {
+          publishLink(tab.url, tokenData.newValue);
+        }
+      });
+    }
+
   });
 });
