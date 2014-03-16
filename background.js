@@ -1,4 +1,4 @@
-var api_url = "http://localhost:8080/api/v1/stars/";
+var api_url = "http://percolator.io/api/v1/stars/";
 
 var createParams = function(url, token){
   return "star[url]=" + url + "&" + "access_token=" + token;
@@ -16,7 +16,7 @@ var publishLink = function(url, token){
 
 // почему не используется identity:
 // а) не работают кукисы
-// б) нет адресной строки. т.к. у нас аутентификация через гитхаб, я не хочу вводить свой пароль на странице без УРЛа
+// б) открывает окно без адресной строки. т.к. у нас аутентификация через гитхаб, я не хочу вводить свой пароль на странице без УРЛа
 
 
 // как это работает:
@@ -24,28 +24,27 @@ var publishLink = function(url, token){
 // она отрабоатывает и помещает токен в локалсторадж
 // подписываемся на изменения локалстораджа и получаем токен %)
 
+var callback;
+
+chrome.storage.onChanged.addListener(function(changes){
+  var tokenData = changes['oauth2_token'];
+
+  if (tokenData && callback) {
+    callback(tokenData.newValue);
+    callback = undefined;
+  }
+});
+
 chrome.browserAction.onClicked.addListener(function(tab) {
-//  chrome.storage.sync.clear();
-
-
   chrome.storage.sync.get('oauth2_token', function(items){
     var token = items['oauth2_token'];
     if (token) {
       publishLink(tab.url, token);
     } else {
+      callback = function(token){
+        publishLink(tab.url, token);
+      };
       window.oauth2.start();
-
-      // потенциальная проблема навешивания кучи Listeners
-      //TODO: добавить фильтр
-      chrome.storage.onChanged.addListener(function(changes){
-        var tokenData = changes['oauth2_token'];
-
-
-        if (tokenData) {
-          publishLink(tab.url, tokenData.newValue);
-        }
-      });
     }
-
   });
 });

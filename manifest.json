@@ -1,10 +1,11 @@
 {
   "manifest_version": 2,
-  "name": "Sharelink client",
+  "name": "Percolator client",
   "version": "0.0.1",
   "permissions": [
     "storage",
-    "http://localhost:8080/oauth/token"
+    "tabs",
+    "http://percolator.io/*"
   ],
 
   "background": {
@@ -15,10 +16,9 @@
   },
 
 
-
   "content_scripts": [
     {
-      "matches": ["http://localhost:8080/blank.html*"],
+      "matches": ["http://percolator.io/blank.html*"],
       "js":["libs/chrome-ex-oauth2/injection.js"],
       "run_at": "document_start"
     }

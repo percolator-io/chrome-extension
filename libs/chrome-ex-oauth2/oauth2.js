@@ -1,10 +1,10 @@
 (function() {
     window.oauth2 = {
 
-        access_token_url: "http://localhost:8080/oauth/token",
-        authorization_url: "http://localhost:8080/oauth/authorize",
-        client_id: "9583a5e9d8ced23c04009278d8be4891f98c1a0b75f0761a43ec29d659127122",
-        redirect_url: "http://localhost:8080/blank.html",
+        access_token_url: "http://percolator.io/oauth/token",
+        authorization_url: "http://percolator.io/oauth/authorize",
+        client_id: "90a15e2c122b779df7742b8c3b278bca0479e7223436b04b4229f1e2ee0a6f71",
+        redirect_url: "http://percolator.io/blank.html",
         scopes: [],
 
       /**
