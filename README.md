@@ -2,6 +2,8 @@
 
 написан хреново, но работает)
 
+[Установить из Google webstore](https://chrome.google.com/webstore/detail/percolator-client/aghgeijikimmbblcablcfinnholopmaj)
+
 # TODO
 
 * вынести конфигурацию
